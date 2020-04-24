@@ -155,12 +155,13 @@ def loadImages(num, letters):
     return imgs
 
 
-def parseFile():
+def parseFile(path):
     """
     parseFile(): parses a text file into a list of string\n
+    name : str containing the file name\n
     returns list of string
     """
-    f = open("input.txt", "r")
+    f = open(path, "r")
     lines = f.readlines()
     f.close()
 
