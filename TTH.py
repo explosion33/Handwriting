@@ -256,9 +256,9 @@ if "__main__" in __name__:
     num = 0
 
     #generateFourm(letters)
-    readFourm(letters, "EthanFourm.png", "images/0",  6)
+    #readFourm(letters, "EthanFourm.png", "images/0",  6)
 
-    text = parseFile()
+    text = parseFile("input.txt")
     imgs = loadImages(num, letters)
     final = renderHandWriting(text, imgs)
 
