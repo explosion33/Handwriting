@@ -1,5 +1,5 @@
 from app import app
-import io, sys, os, qrcode, webbrowser, time
+import io, sys, os, webbrowser, time
 from multiprocessing import Process
 import subprocess
 from winreg import HKEY_CURRENT_USER, OpenKey, QueryValue

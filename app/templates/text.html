@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>File Transfer</title>
+        <title>Upload Text File</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <script language="JavaScript"  src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,7 +18,7 @@
         {% endif %}
         {% endwith %}
         <div class ="container mt-3">
-            <h1>Select file to upload (To PC)</h1>
+            <h1>Upload a .txt file to be converted</h1>
             <form action = "" method = "POST" enctype = "multipart/form-data">
                 <div class="custom-file mb-3">
                     <input type="file" class="custom-file-input" id="customFile" name="filename">
@@ -26,7 +26,7 @@
                 </div>
                 <input type = "submit" value="Send" class="btn btn-block btn-success btn-lg"/>
             </form>
-            <a href="/exit" class="btn btn-block btn-info btn-lg">Exit</a>
+            <a href="/" class="btn btn-block btn-info btn-lg">Back</a>
         </div>
 
         <br>
