@@ -7,21 +7,23 @@
         <meta name="HandheldFriendly" content="true">
     </head>
 
-    <body onload="download()">
+    <body>
         <div class ="container mt-3">
             <h1>Download will begin automaticly</h1>
             <a>If it does not, please click the button below</a>
-            <a href={{ filename }} download="files.zip" class="btn btn-block btn-success btn-lg">Download</a>
-        </div>
-
-        <div class ="container mt-3">
-            <a href="/exit" class="btn btn-block btn-info btn-lg">Exit</a>
+            <a href={{ filename }} class="btn btn-block btn-success btn-lg" download> Download </a>
         </div>
 
         <br>
 
         <div class ="text-center">
-            <img src="static/images/logo.png" alt="Logo" class="img-fluid w-25">
+            <img src={{ filename }} alt="Logo" class="img-fluid w-25">
+        </div>
+
+        <br>
+
+        <div class ="container mt-3">
+            <a href="/" class="btn btn-block btn-info btn-lg">Back</a>
         </div>
 
         <script>

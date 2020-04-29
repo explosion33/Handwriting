@@ -29,7 +29,8 @@
         <br>
 
         <div class="row justify-content-center">
-            <div class="col-sm-2"></div>
+            <div class="col-sm-2">
+            </div>
             <div class="col-sm-8 border">
                     {% for t in text %}
                         <a> {{ t }} </a>
@@ -37,6 +38,10 @@
                     {% endfor %}
             </div>
             <div class="col-sm-2"></div>
+        </div>
+
+        <div class ="container mt-3">
+            <a href="/generate" class="btn btn-block btn-info btn-lg">generate handwriting</a>
         </div>
 
    </body>

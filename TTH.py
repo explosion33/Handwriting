@@ -172,7 +172,7 @@ def parseFile(path):
     
     return text
 
-def renderHandWriting(text, imgs, modifier=0):
+def renderHandWriting(text, imgs, letters, modifier=0):
     """
     renderHandWriting(text, imgs, modifier=0) : renders text into handwritten\n
     text : list of strings\n
@@ -240,6 +240,15 @@ def renderHandWriting(text, imgs, modifier=0):
 
     return final
 
+def save_image(Surface, path):
+    """
+    save_image(Surface, path) : saves a Surface as an image\n
+    Surface : pygame.Surface\n
+    path : path including file name\n
+    """
+
+    pygame.image.save(Surface, path)
+    
 
 if "__main__" in __name__:
     pygame.init()
