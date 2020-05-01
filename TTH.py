@@ -1,6 +1,11 @@
 import pygame
 from random import randint
 
+
+def init():
+    pygame.init()
+    
+
 def crop(img):
     """
     crop(img): crops an image at the center of a black subject\n
@@ -30,11 +35,14 @@ def crop(img):
 
     return new
 
-def generateFourm(letters):
+
+def generateFourm(letters, location=None):
     """
     generateFourm(letters) : generates a fourm with a list of letters\n
     letters : list of lettersn
     returns number of rows used
+
+    returns number of rows used in the fourm
     """
     f = pygame.font.SysFont("", 40, True)
 
@@ -77,7 +85,8 @@ def generateFourm(letters):
         s += 320
         pygame.draw.line(out, (0,0,0), (0, s), (out.get_width(), s), 3)
     
-    pygame.image.save(out, "images/fourm.png")
+    if location:
+        pygame.image.save(out, location)
 
     return r
 
@@ -114,6 +123,8 @@ def readFourm(letters, fourm, out, numRows):
 
         if letter.isupper():
             letter = "upper/" + letter
+
+        s = crop(s)
         pygame.image.save(s, out + "/" + letter + ".png")
         count += 1
         x += w
@@ -129,22 +140,23 @@ def readFourm(letters, fourm, out, numRows):
 #generateFourm(letters)
 #readFourm(letters, "EvansFourm.png", "images/" + str(num), 6)
 
-def loadImages(num, letters):
+def loadImages(num, letters, directory):
     """
     loadImages(num, letters) : loads all text images into a dictionary\n
     num : the file number to open\n
     letters : a list of letters and characters to search for
+    directory : string containing directory (/example/images/)
     """
     imgs = {}
     for letter in letters:
         s = ""
         if letter.isupper(): s = "upper/"
 
-        cropped = pygame.image.load("images/" + str(num) + "/" + s + letter + ".png")
+        cropped = pygame.image.load(directory + str(num) + "/" + s + letter + ".png")
         print("images/" + str(num) + "/" + s + letter + ".png")
         cropped = crop(cropped)
         imgs[letter] = cropped
-        pygame.image.save(cropped, "images/" + str(num) + "/" + s + letter + ".png")
+        pygame.image.save(cropped, directory + str(num) + "/" + s + letter + ".png")
 
     
     space = pygame.Surface((30,5))
