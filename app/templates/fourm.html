@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Upload Fourm</title>
+        <title>WriteX</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <script language="JavaScript"  src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,22 +18,26 @@
         {% endif %}
         {% endwith %}
         <div class ="container mt-3">
-            <h1>Upload the filled out fourm file to be parsed</h1>
+            <h1>fill out the fourm then re-upload it</h1>
+            <a>make sure your device does not compress the image, or font quality will be poor</a>
+            <a href={{ filename }} class="btn btn-block btn-info btn-lg" download> Download Fourm </a>
+            <br>
             <form action = "" method = "POST" enctype = "multipart/form-data">
                 <div class="custom-file mb-3">
                     <input type="file" class="custom-file-input" id="customFile" name="filename">
-                    <label class="custom-file-label" for="customFile">Choose file</label>
+                    <label class="custom-file-label" for="customFile">Select Fourm</label>
                 </div>
-                <input type = "submit" value="Send" class="btn btn-block btn-success btn-lg"/>
+
+                <div class="form-group">
+                    <label for="nameSelect">Font Name</label>
+                    <input class="form-control" id="nameSelect" name="font"></input>
+                </div>
+
+                <input type = "submit" value="Upload" class="btn btn-block btn-success btn-lg"/>
             </form>
             <a href="/" class="btn btn-block btn-info btn-lg">Back</a>
         </div>
 
-        <br>
-
-        <div class ="text-center">
-            <img src="static/images/logo.png" alt="Logo" class="img-fluid w-25">
-        </div>
 
         <script>
             $(".custom-file-input").on("change", function() {

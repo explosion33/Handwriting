@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>File Transfer</title>
+        <title>WriteX</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <script language="JavaScript"  src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,15 +9,13 @@
 
     <body>
         <div class ="container mt-3">
-            <h1>Download will begin automaticly</h1>
-            <a>If it does not, please click the button below</a>
             <a href={{ filename }} class="btn btn-block btn-success btn-lg" download> Download </a>
         </div>
 
         <br>
 
         <div class ="text-center">
-            <img src={{ filename }} alt="Logo" class="img-fluid w-25">
+            <img src={{ filename }} alt="Could not load image" class="" width="312px">
         </div>
 
         <br>
@@ -25,17 +23,6 @@
         <div class ="container mt-3">
             <a href="/" class="btn btn-block btn-info btn-lg">Back</a>
         </div>
-
-        <script>
-            $(".custom-file-input").on("change", function() {
-              var fileName = $(this).val().split("\\").pop();
-              $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-            });
-
-            function download() {
-                window.location.assign( "{{ filenameLong }}" );
-            }
-        </script>
 
    </body>
 </html>
