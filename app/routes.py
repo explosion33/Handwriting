@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, request, url_for, send_file
+from flask import session, render_template, flash, redirect, request, url_for, send_file
 from werkzeug import secure_filename
 from app import app
 import os
@@ -7,57 +7,56 @@ import glob
 import logging #change logging status of wekzeug
 import TTH
 
+TTH.init()
+
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
-pth = os.path.join(app.config["ROOT"], "input.txt")
-num = 0
+def mixLetters():
+    temp = []
+    for l in app.config["LETTERS"]:
+        temp.append(l)
+    temp += app.config["CHARS"]
+    letters = temp
+    return letters
 
-#Call to shutdown server and close QR window
-def shutdown_server():
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    t = TTH.parseFile(pth)
-
-    print(pth,t)
-
-    return render_template("main.html", text=t, letters=app.config["LETTERS"], chars=app.config["CHARS"])
-
-
-#main page plus random key handles transfers
-@app.route('/text',  methods=['GET', 'POST'])
-def uploadText():
-    #if there was a POST request
     if request.method == 'POST':
-        #get file and gerneate name
-        f = request.files['filename']
-        filename = secure_filename(f.filename)
-        #make sure there was a file if not post Error
-        print(filename)
-        if filename:
-            i = filename[::-1]
-            if i[0:3] == "txt":
-                #save file and show success page
-                pth = os.path.join(app.config["ROOT"], "input.txt")
-                f.save(pth)
-                print("returning")
-                return redirect(url_for("home"))
-            else:
-                flash("Error: please submit a txt file")
-        else:
-            flash("Error: please select a file")
-    print("text")
-    return render_template('text.html')
+        data = request.form["data"]
+        session["rawdata"] = data
+        data = data.splitlines()
+        session["data"] = data
+
+        font = request.form["font"]
+        session["font"] = font
+
+        return redirect(url_for("generate"))
+
+    try:
+        rawdata = session["rawdata"]
+    except KeyError:
+        rawdata = ""
+
+    fonts = []
+    for filename in os.listdir(os.path.join(app.config["ROOT"], "fonts")):
+        fonts.append(filename)
+
+    return render_template("main.html", letters=app.config["LETTERS"], chars=app.config["CHARS"], data=rawdata, fonts=fonts)
+
 
 @app.route('/fourm',  methods=['GET', 'POST'])
 def uploadFourm():
     #if there was a POST request
     if request.method == 'POST':
+
+        num = request.form["font"]
+
+        if num == "" or num == None:
+            num = "default"
+
+
         #get file and gerneate name
         f = request.files['filename']
         filename = secure_filename(f.filename)
@@ -67,29 +66,54 @@ def uploadFourm():
             i = filename[::-1]
             if i[0:3] == "gnp":
                 #save file and show success page
-                pth = os.path.join(app.config["ROOT"], "fourm.png")
+                pth = os.path.join(app.config["ROOT"] + "/app/static/images", "fourm.png")
                 f.save(pth)
                 print("returning")
+
+                try:
+                    path = os.path.join(app.config["ROOT"] +"/fonts", str(num)) 
+                    os.mkdir(path)
+                    path2 = os.path.join(path, "upper")
+                    os.mkdir(path2)
+                except FileExistsError:
+                    print("Directory exists, updating images")
+
+                temp = []
+                for l in app.config["LETTERS"]:
+                    temp.append(l)
+                temp += app.config["CHARS"]
+                letters = temp
+
+                r = TTH.generateFourm(letters)
+                TTH.readFourm(letters, pth, path, r)
+
+
                 return redirect(url_for("home"))
             else:
                 flash("Error: please submit a png file")
         else:
             flash("Error: please select a file")
-    print("fourm")
-    return render_template('fourm.html')
+
+    pth = app.config["ROOT"] + "/app/static/images/blankFourm.png"
+    TTH.generateFourm(mixLetters(), pth)
+    
+    return render_template('fourm.html', filename="static/images/blankFourm.png")
 
 @app.route('/generate')
 def generate():
+    letters = mixLetters()
 
-    temp = []
-    for l in app.config["LETTERS"]:
-        temp.append(l)
-    temp += app.config["CHARS"]
-    letters = temp
+    num = session["font"]
 
 
-    text = TTH.parseFile(pth)
-    imgs = TTH.loadImages(num, letters)
+    text = session["data"]
+
+    if not text:
+        flash("Error: Please enter text")
+        return redirect(url_for("home"))
+
+
+    imgs = TTH.loadImages(num, letters, "fonts/")
     final = TTH.renderHandWriting(text, imgs, letters)
 
     savePath = os.path.join(app.config["ROOT"] + "/app/static/images/", "image.png")
@@ -99,8 +123,11 @@ def generate():
     return render_template("download.html", filename="static/images/image.png")
 
 
-#exit page shutsdown server
-@app.route("/exit")
-def exit():
-    shutdown_server()
-    return render_template("exit.html")
+@app.after_request
+def add_header(r):
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
+
