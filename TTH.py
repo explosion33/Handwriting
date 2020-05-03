@@ -260,7 +260,23 @@ def save_image(Surface, path):
     """
 
     pygame.image.save(Surface, path)
+
+def removeBackground(img, color=(255,255,255), tolerance=20):
+    w,h = img.get_size()
+    s = pygame.Surface((w,h), pygame.SRCALPHA)
+    s.blit(img, (0,0))
     
+    
+    for x in range(w):
+        for y in range(h):
+            R,G,B,A = s.get_at((x,y))
+            R2, G2, B2 = color
+            if R2-R <= tolerance and G2-G <= tolerance and B2-B <= tolerance:
+                s.set_at((x,y), (R2,B2,G2,0))
+
+
+    return s
+
 
 if "__main__" in __name__:
     pygame.init()
