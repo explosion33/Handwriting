@@ -99,14 +99,28 @@ def uploadFourm():
     
     return render_template('fourm.html', filename="static/images/blankFourm.png")
 
-@app.route('/generate')
+
+@app.route('/generate', methods=["GET", "POST"])
 def generate():
+    if request.method == 'POST':
+        session["modifier"] = float(request.form["modifier"])
+        session["tolerance"] = int(request.form["tolerance"])
+
+
     letters = mixLetters()
 
     num = session["font"]
-
-
     text = session["data"]
+
+
+    try: #check if session data has been set, if not set it
+        session["modifier"]
+    except KeyError:
+        session["tolerance"] = 200
+        session["modifier"] = 0
+
+
+    print(session["modifier"], type(session["modifier"]))
 
     if not text:
         flash("Error: Please enter text")
@@ -114,14 +128,21 @@ def generate():
 
 
     imgs = TTH.loadImages(num, letters, "fonts/")
-    final = TTH.renderHandWriting(text, imgs, letters)
+    final = TTH.renderHandWriting(text, imgs, letters, modifier=float(session["modifier"]))
 
     savePath = os.path.join(app.config["ROOT"] + "/app/static/images/", "image.png")
 
+    if int(session["tolerance"]) > 0:
+
+        final = TTH.removeBackground(final, tolerance=int(session["tolerance"]))
+
     TTH.save_image(final, savePath)
 
-    return render_template("download.html", filename="static/images/image.png")
+    return render_template("download.html", filename="static/images/image.png", mod=session["modifier"], tol=session["tolerance"])
 
+@app.route("/prefrences", methods=['GET', 'POST'])
+def prefrences():
+    pass
 
 @app.after_request
 def add_header(r):
