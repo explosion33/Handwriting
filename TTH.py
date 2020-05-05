@@ -28,7 +28,6 @@ def crop(img):
     w = xr - xl + 1
     h = yb - yt + 1
 
-    #print(w,h, img.get_size(), (xr,xl,yt,yb))
 
     new = pygame.Surface((w,h))
     new.blit(img, (-xl,-yt))
@@ -61,7 +60,6 @@ def generateFourm(letters, location=None):
     letter = 0
     for row in range(r):
         for column in range(12):
-            #print(letter)
             w = letters[letter]
             w = reverseReplace(w)
             t = f.render(w, True, (0,0,0))
@@ -80,8 +78,6 @@ def generateFourm(letters, location=None):
     s = 64
     for row in range(r-1):
         pygame.draw.line(out, (0,0,0), (0, (row+1)*320), (out.get_width(), (row+1)*320), 3)
-
-        #print(s)
 
         pygame.draw.line(out, (0,0,0), (0, s), (out.get_width(), s), 3)
         s += 320
@@ -108,8 +104,6 @@ def readFourm(letters, fourm, out, numRows):
     w,h = fourm.get_size()
     w = w /12
     h = h /(1.25*numRows)
-    
-    #print(w,h)
 
     x = 0
     y = h/4
@@ -148,15 +142,25 @@ def loadImages(num, letters, directory):
     directory : string containing directory (/example/images/)
     """
     imgs = {}
+    ERRORS = []
     for letter in letters:
         s = ""
         if letter.isupper(): s = "upper/"
 
-        cropped = pygame.image.load(directory + str(num) + "/" + s + letter + ".png")
-        print("images/" + str(num) + "/" + s + letter + ".png")
-        cropped = crop(cropped)
-        imgs[letter] = cropped
-        pygame.image.save(cropped, directory + str(num) + "/" + s + letter + ".png")
+        try:
+            cropped = pygame.image.load(directory + str(num) + "/" + s + letter + ".png")
+            cropped = crop(cropped)
+            imgs[letter] = cropped
+            pygame.image.save(cropped, directory + str(num) + "/" + s + letter + ".png")
+        except:
+            ERRORS.append("could not find image for " + letter)
+
+            blank = pygame.Surface((30,5))
+            blank.fill((255,255,255))
+
+            imgs[letter] = blank
+        
+        
 
     
     space = pygame.Surface((30,5))
@@ -164,7 +168,7 @@ def loadImages(num, letters, directory):
 
     imgs[" "] = space
 
-    return imgs
+    return imgs, ERRORS
 
 
 def parseFile(path):
