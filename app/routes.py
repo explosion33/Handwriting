@@ -12,15 +12,6 @@ TTH.init()
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
-def mixLetters():
-    temp = []
-    for l in app.config["LETTERS"]:
-        temp.append(l)
-    temp += app.config["CHARS"]
-    letters = temp
-    return letters
-
-
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
@@ -43,10 +34,10 @@ def home():
     for filename in os.listdir(os.path.join(app.config["ROOT"], "fonts")):
         fonts.append(filename)
 
-    return render_template("main.html", letters=app.config["LETTERS"], chars=app.config["CHARS"], data=rawdata, fonts=fonts)
+    return render_template("main.html", letters=app.config["LETTERS"], data=rawdata, fonts=fonts)
 
 
-@app.route('/fourm',  methods=['GET', 'POST'])
+@app.route('/form',  methods=['GET', 'POST'])
 def uploadFourm():
     #if there was a POST request
     if request.method == 'POST':
@@ -64,7 +55,7 @@ def uploadFourm():
         print(filename)
         if filename:
             i = filename[::-1]
-            if i[0:3] == "gnp":
+            if i[0:3] == "gnp" or i[0:3] == "gpj":
                 #save file and show success page
                 pth = os.path.join(app.config["ROOT"] + "/app/static/images", "fourm.png")
                 f.save(pth)
@@ -78,11 +69,7 @@ def uploadFourm():
                 except FileExistsError:
                     print("Directory exists, updating images")
 
-                temp = []
-                for l in app.config["LETTERS"]:
-                    temp.append(l)
-                temp += app.config["CHARS"]
-                letters = temp
+                letters = TTH.makeLetterList(app.config["LETTERS"])
 
                 r = TTH.generateFourm(letters)
                 TTH.readFourm(letters, pth, path, r)
@@ -95,7 +82,7 @@ def uploadFourm():
             flash("Error: please select a file")
 
     pth = app.config["ROOT"] + "/app/static/images/blankFourm.png"
-    TTH.generateFourm(mixLetters(), pth)
+    TTH.generateFourm(TTH.makeLetterList(app.config["LETTERS"]), pth)
     
     return render_template('fourm.html', filename="static/images/blankFourm.png")
 
@@ -107,7 +94,8 @@ def generate():
         session["tolerance"] = int(request.form["tolerance"])
 
 
-    letters = mixLetters()
+    letters = TTH.makeLetterList(app.config["LETTERS"])
+    print(letters)
 
     num = session["font"]
     text = session["data"]
