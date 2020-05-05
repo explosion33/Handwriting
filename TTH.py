@@ -62,7 +62,9 @@ def generateFourm(letters, location=None):
     for row in range(r):
         for column in range(12):
             #print(letter)
-            t = f.render(letters[letter], True, (0,0,0))
+            w = letters[letter]
+            w = reverseReplace(w)
+            t = f.render(w, True, (0,0,0))
             out.blit(t, (x+128-(t.get_width()/2),y + 32 - (t.get_height()/2)))
             letter += 1
 
@@ -116,13 +118,11 @@ def readFourm(letters, fourm, out, numRows):
         s = pygame.Surface((w-8,h-8))
         s.blit(fourm, (-x - 4,-y - 4))
 
-
-
-        if letter in characters:
-            letter = alternate[characters.index(letter)]
+        letter = replace(letter)
 
         if letter.isupper():
             letter = "upper/" + letter
+
 
         s = crop(s)
         pygame.image.save(s, out + "/" + letter + ".png")
@@ -197,12 +197,10 @@ def renderHandWriting(text, imgs, letters, modifier=0):
         w = 0
         h = 0
         for letter in s: #get width and height nessecary
-            if letter == ".":
-                letter = "dot"
-            if letter == "?":
-                letter = "question"
+            
+            letter = replace(letter)
                 
-            if letter in letters or letter in [".", "?", " "]:
+            if letter in letters or letter in [" "]:
                 w1,h1 = imgs[letter].get_size()
                 w += w1 + 5
                 if h1 > h: h = h1
@@ -214,14 +212,13 @@ def renderHandWriting(text, imgs, letters, modifier=0):
         x = 0
         for letter in s: #add letter images to line
 
-            if letter == ".":
-                letter = "dot"
-            if letter == "?":
-                letter = "question"
-            if letter in letters or letter in [".", "?", " "]:
+            letter = replace(letter)
+
+            
+            if letter in letters or letter in [" "]:
                 y = h/2 - imgs[letter].get_height()/2
                 r = randint(0,15) * ((randint(0,1)*2)-1) * modifier
-                if letter == "dot":
+                if letter == ".":
                     y = wordP.get_height()/2 + 25
                     r = randint(0,5) * ((randint(0,1)*2)-1) * modifier
 
@@ -277,6 +274,59 @@ def removeBackground(img, color=(255,255,255), tolerance=20):
 
     return s
 
+def makeLetterList(letters):
+    replace = {
+        "/": "forward",
+        "\\": "back",
+        ":": "colon",
+        "?": "question",
+        '"': "quote",
+        "<": "left",
+        ">": "right" 
+    }
+
+    out = []
+    for letter in letters:
+        if letter in replace:
+            out.append(replace[letter])
+        else:
+            out.append(letter)
+    return out
+
+def replace(letter):
+    replace = {
+        "/": "forward",
+        "\\": "back",
+        ":": "colon",
+        "?": "question",
+        '"': "quote",
+        "<": "left",
+        ">": "right" 
+    }
+
+    if letter in replace:
+        return replace[letter]
+    return letter
+
+def reverseReplace(letter):
+    replace = {
+        "/": "forward",
+        "\\": "back",
+        ":": "colon",
+        "?": "question",
+        '"': "quote",
+        "<": "left",
+        ">": "right" 
+    }
+
+    v = list(replace.values())
+    k = list(replace.keys())
+
+    if letter in v:
+        i = v.index(letter)
+        return k[i]
+    return letter
+        
 
 if "__main__" in __name__:
     pygame.init()
