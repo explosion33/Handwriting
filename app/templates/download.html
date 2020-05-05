@@ -8,8 +8,13 @@
     </head>
 
     <body>
-        <div class ="container mt-3">
-            <a href={{ filename }} class="btn btn-block btn-info btn-lg" download> Download </a>
+        <br>
+        <div class ="row">
+            <div class="col-2"></div>
+            <div class ="col-8">
+                <a href={{ filename }} class="btn btn-block btn-info btn-lg" download> Download </a>
+            </div>
+            <div class="col-2"></div>
         </div>
 
         <br>
@@ -20,28 +25,39 @@
 
         <br>
 
-        <div class ="container mt-3">
-            <a href="/" class="btn btn-block btn-secondary btn-lg">Back</a>
+        <div class ="row">
+            <div class="col-2"></div>
+            <div class ="col-8">
+                <a href="/" class="btn btn-block btn-secondary">Back</a>
+            </div>
+            <div class="col-2"></div>
         </div>
+        <br>
+        <br>
 
-        <div class ="container mt-3">
+        <div class ="row">
+            <div class="col-2"></div>
 
-            <form method="POST">
-                <div class="form-group">
-                    <label for="modRange">Height Variation:</label>
-                    <b id="modValue">{{ mod }}</b>
-                    <input type="range" min="0" max="1" step=".005" value="{{ mod }}" class="form-control-range" id="modRange", name="modifier">
-                    
-                </div>
+            <div class="col-8">
+                <form method="POST">
+                    <div class="form-group">
+                        <label for="modRange">Height Variation:</label>
+                        <b id="modValue">{{ mod }}</b>
+                        <input type="range" min="0" max="1" step=".005" value="{{ mod }}" class="form-control-range" id="modRange", name="modifier">
+                        
+                    </div>
 
-                <div class="form-group">
-                    <label for="tolRange">Chroma Key Threshold</label>
-                    <b id="tolValue">{{ tol }}</b>
-                    <input type="range" min="0" max="255" value="{{ tol }}" class="form-control-range" id="tolRange", name="tolerance">
-                </div>
+                    <div class="form-group">
+                        <label for="tolRange">Chroma Key Threshold:</label>
+                        <b id="tolValue">{{ tol }}</b>
+                        <input type="range" min="0" max="255" value="{{ tol }}" class="form-control-range" id="tolRange", name="tolerance">
+                    </div>
 
-                <button type="submit" class="btn btn-primary">Refresh</button>
-            </form>
+                    <button type="submit" class="btn btn-primary">Refresh</button>
+                </form>
+            </div>  
+
+            <div class="col-2"></div>
 
         </div>
 
@@ -50,12 +66,12 @@
 
     <script>
        setInterval(function() {
-            if(document.getElementById("modRange") === document.activeElement) {
+            if(true) { //document.getElementById("modRange") === document.activeElement to minimize workload (does not work on mobile)
                 val = document.getElementById("modRange").value
                 document.getElementById("modValue").innerText = val
             }
 
-            if(document.getElementById("tolRange") === document.activeElement) {
+            if(true) {
                 val = document.getElementById("tolRange").value
                 document.getElementById("tolValue").innerText = val
             }
