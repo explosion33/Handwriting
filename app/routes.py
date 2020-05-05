@@ -108,14 +108,17 @@ def generate():
         session["modifier"] = 0
 
 
-    print(session["modifier"], type(session["modifier"]))
-
     if not text:
         flash("Error: Please enter text")
         return redirect(url_for("home"))
 
 
-    imgs = TTH.loadImages(num, letters, "fonts/")
+    imgs, errors = TTH.loadImages(num, letters, "fonts/")
+    
+    for error in errors:
+        print("ERROR:", error)
+        flash(error)
+
     final = TTH.renderHandWriting(text, imgs, letters, modifier=float(session["modifier"]))
 
     savePath = os.path.join(app.config["ROOT"] + "/app/static/images/", "image.png")
