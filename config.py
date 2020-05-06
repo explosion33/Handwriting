@@ -7,4 +7,5 @@ class Config(object):
     PORT = 8787                                                                                                     # port to run server on                                                            # IP adress + port to display on qr
     ROOT = os.path.dirname(os.path.abspath(__file__))
     
-    LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?.<>"
+    LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?.<>,!"
+    LETTERS += '"'
