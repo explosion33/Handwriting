@@ -222,10 +222,13 @@ def renderHandWriting(text, imgs, letters, modifier=0):
             if letter in letters or letter in [" "]:
                 y = h/2 - imgs[letter].get_height()/2
                 r = randint(0,15) * ((randint(0,1)*2)-1) * modifier
-                if letter == ".":
+                if letter in ".,":
                     y = wordP.get_height()/2 + 25
                     r = randint(0,5) * ((randint(0,1)*2)-1) * modifier
-
+                elif letter == "'" or letter == "quote":
+                    y = wordP.get_height()/2 - 65
+                    print(y)
+                    r = randint(0,2) * ((randint(0,1)*2)-1) * modifier
 
                 
                 y += r
