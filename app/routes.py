@@ -17,7 +17,14 @@ def home():
     if request.method == 'POST':
         data = request.form["data"]
         session["rawdata"] = data
+
+        for i in data:
+            data = data.replace("”", '"')
+            data = data.replace("“", '"')
+
+
         data = data.splitlines()
+
         session["data"] = data
 
         font = request.form["font"]
@@ -66,8 +73,10 @@ def uploadFourm():
                     os.mkdir(path)
                     path2 = os.path.join(path, "upper")
                     os.mkdir(path2)
+                    flash("Creating new font")
                 except FileExistsError:
                     print("Directory exists, updating images")
+                    flash("Updating font")
 
                 letters = TTH.makeLetterList(app.config["LETTERS"])
 
@@ -133,7 +142,27 @@ def generate():
 
 @app.route("/prefrences", methods=['GET', 'POST'])
 def prefrences():
-    pass
+    if request.method == 'POST':
+        new = request.form["letters"]
+        new = new.splitlines()
+
+        temp = ""
+        for l in new:
+            temp += l
+
+        lst = []
+        for i in temp:
+            lst.append(i)
+        lst = list(dict.fromkeys(lst))
+
+        new=""
+        for l in lst:
+            new += l
+
+        app.config["LETTERS"] = new
+        flash("Updated prefrences")
+
+    return render_template("prefrences.html", letters=app.config["LETTERS"])
 
 @app.after_request
 def add_header(r):
