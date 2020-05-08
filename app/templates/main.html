@@ -17,7 +17,20 @@
         </ul>
         {% endif %}
         {% endwith %}
+
         <div class ="container mt-3">
+            <div class="float-right">
+                {% if not logged %}
+                    <a href="/login" class="">Log In</a>
+                    <a>|</a>
+                    <a href="/signup" class="">Sign Up</a>
+                {% endif %}
+
+                {% if logged %}
+                    <a href="/logout" class="">Log Out</a>
+                {% endif %}
+            </div>
+
             <h1>WriteX</h1>
             <a>Convert text to custom handwritten images</a>
             <br>
